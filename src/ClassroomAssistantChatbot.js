@@ -1,16 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FaPaperPlane, FaTimes, FaBars } from 'react-icons/fa';
-import Header from './components/Header'; // Import the new Header component
-import Footer from './components/Footer'; // Import the Footer component
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const quickAccessItems = [
-  "Class Timetable", "Teacher Information", "PG and Hostel Details", 
-  "Clubs and Societies", "Food Options", "Laundry Services", 
-  "Gym Details", "Academic Office", "New Student Checklist", 
-  "Rules and Regulations", "Sports Facilities", "Bus Services", 
-  "Faculty Locations"
-];
+import React, { useEffect, useRef, useState } from 'react';
+import { FaPaperPlane } from 'react-icons/fa';
+import Footer from './components/Footer'; 
+import Header from './components/Header'; 
+import QuickAccess from './components/QuickAccess';
+import { generateResponse } from './services/geminiApi';
 
 export default function ClassroomAssistantChatbot() {
   const [messages, setMessages] = useState([]);
@@ -24,21 +18,22 @@ export default function ClassroomAssistantChatbot() {
 
   useEffect(scrollToBottom, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputMessage.trim()) {
       setMessages([...messages, { text: inputMessage, sender: 'user' }]);
       setInputMessage('');
-      setTimeout(() => {
-        setMessages(prev => [...prev, { text: "I'm processing your request. How can I assist you further?", sender: 'bot' }]);
-      }, 1000);
+      
+      const botResponse = await generateResponse(inputMessage);
+      setMessages(prev => [...prev, { text: botResponse, sender: 'bot' }]);
     }
   };
 
-  const handleQuickAccess = (item) => {
-    setMessages([...messages, { text: `Tell me about ${item}`, sender: 'user' }]);
-    setTimeout(() => {
-      setMessages(prev => [...prev, { text: `Here's information about ${item}...`, sender: 'bot' }]);
-    }, 1000);
+  const handleQuickAccess = async (item) => {
+    const userMessage = `Tell me about ${item}`;
+    setMessages([...messages, { text: userMessage, sender: 'user' }]);
+    
+    const botResponse = await generateResponse(userMessage);
+    setMessages(prev => [...prev, { text: botResponse, sender: 'bot' }]);
   };
 
   return (
@@ -56,37 +51,18 @@ export default function ClassroomAssistantChatbot() {
           ))}
           {messages.length === 0 && (
             <div className="text-center text-muted my-5">
-              <h2 className="h4">Welcome to Campus Connet</h2>
+              <h2 className="h4">Welcome to Campus Connect</h2>
               <p>How can I help you today?</p>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="mb-3">
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <h2 className="h6 mb-0">Quick Access</h2>
-            <button 
-              className="btn btn-sm btn-outline-secondary"
-              onClick={() => setShowQuickAccess(!showQuickAccess)}
-            >
-              {showQuickAccess ? <FaTimes /> : <FaBars />}
-            </button>
-          </div>
-          {showQuickAccess && (
-            <div className="d-flex flex-wrap gap-2">
-              {quickAccessItems.map((item, index) => (
-                <button 
-                  key={index} 
-                  className="btn btn-outline-primary btn-sm rounded-pill" 
-                  onClick={() => handleQuickAccess(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <QuickAccess 
+          onItemClick={handleQuickAccess}
+          showQuickAccess={showQuickAccess}
+          setShowQuickAccess={setShowQuickAccess}
+        />
 
         <div className="d-flex">
           <input
@@ -102,7 +78,6 @@ export default function ClassroomAssistantChatbot() {
           </button>
         </div>
       </main>
-
       <Footer />
     </div>
   );
