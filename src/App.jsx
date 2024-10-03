@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
-import ChatPage from './ClassroomAssistantChatbot'; // Assume you have this component
+import ChatPage from './components/ChatPage'; // Assume you have this component
 
 function App() {
   return (
