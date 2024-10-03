@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/LoginPage.css'; // We'll create this file for styles
+import '../style/LoginPage.css';
 
 const courses = ['BCA'];
 const sections = ['A', 'B', 'C', 'D'];
