@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import knowledgeBase from "./knowledgeBase"
+import { fetchCollectionData } from '../firebase/config';
 
 const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
 
@@ -7,14 +7,13 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 let chatSession;
 
-// Improved retrieval function
-const retrieveRelevantInfo = (query) => {
+const retrieveRelevantInfo = async (query) => {
   query = query.toLowerCase();
   let relevantInfo = {};
 
   const categories = {
-    timetable: ["timetable", "schedule", "class", "time table", "time"],
-    teachers: ["teacher","mam", "professor", "mail", "room", "email", "faculty", "detail", "cabin"],
+    timetable: ["timetable", "schedule", "class", "time table", "time", "professor", "prof"],
+    teachers: ["teacher", "Teacher", "mam" , "professor", "mail", "room", "email", "faculty", "detail", "cabin"],
     pgandhostel: ["pg", "hostel", "accommodation"],
     clubsandsocieties: ["club", "society", "extracurricular"],
     foodoption: ["food", "canteen", "cafeteria", "meal"],
@@ -29,14 +28,17 @@ const retrieveRelevantInfo = (query) => {
 
   for (const [category, keywords] of Object.entries(categories)) {
     if (keywords.some(keyword => query.includes(keyword))) {
-      relevantInfo[category] = knowledgeBase[category];
+      const data = await fetchCollectionData(category);
+      if (data) {
+        relevantInfo[category] = data;
+      }
     }
   }
 
   return JSON.stringify(relevantInfo, null, 2);
 };
 
-const initializeChatSession = async () => {
+export const initializeGeminiWithUserData = async (userData) => {
   chatSession = model.startChat({
     history: [
       {
@@ -49,11 +51,11 @@ const initializeChatSession = async () => {
       },
       {
         role: "user",
-        parts: [{ text: "I am Satyam Tiwari from Christ University. I am a Bachelor in Computer Application (BCA) student. I am currently in my 5th semester." }],
+        parts: [{ text: `I am ${userData.name} from Christ University. I am a ${userData.course} student. I am currently in section ${userData.section}. My registration number is ${userData.regNumber}.` }],
       },
       {
         role: "model",
-        parts: [{ text: "Thank you for providing your information, Satyam. As a 5th semester Bachelor in Computer Application student at Christ University, I'm here to assist you with any questions you might have about your courses, teachers, schedules, or other university-related matters. What would you like to know?" }],
+        parts: [{ text: `Thank you for providing your information, ${userData.name}. As a ${userData.course} student in section ${userData.section} at Christ University, I'm here to assist you with any questions you might have about your courses, teachers, schedules, or other university-related matters. What would you like to know?` }],
       },
     ],
   });
@@ -62,25 +64,21 @@ const initializeChatSession = async () => {
 export const generateResponse = async (prompt) => {
   try {
     if (!chatSession) {
-      await initializeChatSession();
+      throw new Error("Chat session not initialized. Please log in first.");
     }
 
-    // Retrieve relevant information from the knowledge base
-    const relevantInfo = retrieveRelevantInfo(prompt);
-
-    // Combine the user's prompt with the retrieved information
+    const relevantInfo = await retrieveRelevantInfo(prompt);
     const enhancedPrompt = `User query: ${prompt}\n\nRelevant information: ${relevantInfo}\n\nPlease provide a response based on the user query and the relevant information provided. If the relevant information is empty, still try to answer based on your general knowledge about university structures and the context provided in the chat history. Always prioritize the provided information over general knowledge when available.`;
 
     const result = await chatSession.sendMessage(enhancedPrompt);
     const response = await result.response;
-    const text = response.text();
-    return text;
+    return response.text();
   } catch (error) {
     console.error("Error generating response:", error);
-    return "I'm sorry, I encountered an error while processing your request.";
+    throw error;
   }
 };
 
 export const clearChatHistory = async () => {
-  await initializeChatSession();
+  chatSession = null;
 };
