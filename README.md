@@ -33,4 +33,19 @@ Campus Assist is a chatbot designed to help students, faculty, and visitors at C
    ```bash
    npm start
 
+## Environment Variables
+
+To run this project, you will need to add a `.env` file in the root directory of your project with the following environment variables:
+
+```bash
+# Gemini API Key
+REACT_APP_GEMINI_API_KEY=GEMINI_API_KEY_HERE
+
+# Firebase Configuration
+REACT_APP_FIREBASE_API_KEY=FIREBASE_API_KEY_HERE
+REACT_APP_FIREBASE_AUTH_DOMAIN=FIREBASE_AUTH_DOMAIN_HERE
+REACT_APP_FIREBASE_PROJECT_ID=FIREBASE_PROJECT_ID_HERE
+REACT_APP_FIREBASE_STORAGE_BUCKET=FIREBASE_STORAGE_BUCKET_HERE
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=FIREBASE_MESSAGING_SENDER_ID_HERE
+REACT_APP_FIREBASE_APP_ID=1:FIREBASE_APP_ID_HERE
 
