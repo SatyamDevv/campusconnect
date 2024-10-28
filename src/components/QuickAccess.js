@@ -5,7 +5,7 @@ const quickAccessItems = [
   "Class Timetable", "Teacher Information", "PG and Hostel Details", 
   "Clubs and Societies", "Food Options", "Laundry Services", 
   "Gym Details", "Academic Office", "New Student Checklist", 
-  "Rules and Regulations", "Sports Facilities", "Bus Services", 
+  "Examination Rules", "Sports Facilities", "Bus Services", 
   "Faculty Locations"
 ];
 

@@ -14,7 +14,7 @@ const retrieveRelevantInfo = async (query) => {
   const categories = {
     timetable: ["timetable", "schedule", "class", "time table", "time", "professor", "prof"],
     teachers: ["teacher", "Teacher", "mam" , "professor", "mail", "room", "email", "faculty", "detail", "cabin"],
-    pgandhostel: ["pg", "hostel", "accommodation"],
+    pgandhostel: ["pg", "hostel", "accommodation", "resident"],
     clubsandsocieties: ["club", "society", "extracurricular"],
     foodoption: ["food", "canteen", "cafeteria", "meal"],
     laundry: ["laundry", "washing"],
@@ -23,7 +23,8 @@ const retrieveRelevantInfo = async (query) => {
     newstudentchecklist: ["new student", "checklist", "orientation"],
     sportsfacility: ["sports", "facility", "game"],
     busservices: ["bus", "transport", "shuttle"],
-    facultylocation: ["faculty location", "office", "department"]
+    facultylocation: ["faculty location", "office", "department"],
+    examinationrules: ["examination", "rules", "exam", "exam rules", "exam schedule", "Examination Rules"]
   };
 
   for (const [category, keywords] of Object.entries(categories)) {
