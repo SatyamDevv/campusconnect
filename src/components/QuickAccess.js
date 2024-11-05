@@ -2,11 +2,11 @@ import React from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 const quickAccessItems = [
-  "Class Timetable", "Teacher Information", "PG and Hostel Details", 
+  "Teacher Information","Holiday List", "PG and Hostel Details", "Class Timetable",
   "Clubs and Societies", "Food Options", "Laundry Services", 
   "Gym Details", "Academic Office", "New Student Checklist", 
   "Examination Rules", "Sports Facilities", "Bus Services", 
-  "Faculty Locations"
+  "Faculty Locations", 
 ];
 
 const QuickAccess = ({ onItemClick, showQuickAccess, setShowQuickAccess }) => {

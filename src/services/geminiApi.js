@@ -24,7 +24,8 @@ const retrieveRelevantInfo = async (query) => {
     sportsfacility: ["sports", "facility", "game"],
     busservices: ["bus", "transport", "shuttle"],
     facultylocation: ["faculty location", "office", "department"],
-    examinationrules: ["examination", "rules", "exam", "exam rules", "exam schedule", "Examination Rules"]
+    examinationrules: ["examination", "rules", "exam", "exam rules", "exam schedule", "Examination Rules"],
+    holidaylist: ["holiday", "Holiday List", "holidays", "holiday list"]
   };
 
   for (const [category, keywords] of Object.entries(categories)) {
