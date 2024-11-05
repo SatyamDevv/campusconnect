@@ -3,9 +3,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 
 const quickAccessItems = [
   "Teacher Information","Holiday List", "PG and Hostel Details", "Class Timetable",
-   "Food Options", "Laundry Services", 
-  "Gym Details", "Academic Office", "New Student Checklist", 
-  "Examination Rules", "Sports Facilities", "Bus Services", 
+  "Food Options", "Gym Details", "Examination Rules", "Sports Facilities", "Bus Services", 
   "Faculty Locations", 
 ];
 
